@@ -18,7 +18,11 @@ Store plechy("plechy", 20);
 Store kysiaren("kysiaren", 60);
 Store pec("pec", 5);
 
-Histogram doba_vyroby("Doba vyroby croiisantov", 200, 50, 10);
+Histogram doba_vyroby_hist("Doba vyroby croisantov", 200, 50, 10);
+Stat pocet_kusov_stat("Pocet kusov na plechu");
+
+int pocet_ocakavanych_kusov = 0;
+int pocet_pripravenych_davok = 0;
 
 int main(int agrc, char **argv) {
 
@@ -32,17 +36,21 @@ int main(int agrc, char **argv) {
     pekar2.Output();
     laminator.Output();
 
-    pekar3.Output();
     tvarovac.Output();
-
+    
     chladnicka.Output();
 
-    pekar4.Output();
+    pekar3.Output();
     plechy.Output();
     kysiaren.Output();
     pec.Output();
 
-    doba_vyroby.Output();
+    doba_vyroby_hist.Output();
+    pocet_kusov_stat.Output();
+    
+    std::cout << "\nPripravenych davok: " << pocet_pripravenych_davok << std::endl;
+    std::cout << "\nOcakavanych croaissantov: " << pocet_ocakavanych_kusov << std::endl;
+    std::cout << "\nDokoncenych croaissantov: " << pocet_kusov_stat.Sum() << std::endl;
     
     return 0;
 }
