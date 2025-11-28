@@ -5,52 +5,44 @@
  */
 
 #include "model.hpp"
+#include "parameters.hpp"
+#include "resources.hpp"
+#include "statistics.hpp"
 
-Facility miesacka("miesacka");
-Facility pekar1("pekar1");
-Facility pekar2("pekar2");
-Facility pekar3("pekar3");
-Facility pekar4("pekar4");
-Store chladnicka("chladnicka", 8);
-Facility laminator("laminator");
-Facility tvarovac("tvarovac");
-Store plechy("plechy", 20);
-Store kysiaren("kysiaren", 60);
-Store pec("pec", 5);
+Parameters *Param = nullptr;
+Resources *Res = nullptr;
+Statistics *Stats = nullptr;
 
-Histogram doba_vyroby_hist("Doba vyroby croisantov", 200, 50, 10);
-Stat pocet_kusov_stat("Pocet kusov na plechu");
+int main(int argc, char **argv) {
+    // Konfiguracny subor
+    const char *filename = nullptr;
 
-int pocet_ocakavanych_kusov = 0;
-int pocet_pripravenych_davok = 0;
+    if (argc == 2) filename = argv[1];
 
-int main(int agrc, char **argv) {
+    // Parametre experimentu
+    Param = new Parameters(filename);
+    Param->print();
 
-    Init(0, CAS_SIMULACIE);
-    (new GeneratorDavok)->Activate();
+    // Zdroje a statistiky
+    Res = new Resources(Param);
+    Stats = new Statistics;
+
+    // Simulacia
+    Init(0, Param->simulation_duration());
+
+    DoughGenerator generator;
+    generator.Activate();
+
     Run();
 
-    pekar1.Output();
-    miesacka.Output();
+    // Vypis vysledkov
+    Res->print();
+    Stats->print();
 
-    pekar2.Output();
-    laminator.Output();
+    // Uvolnenie zdrojov
+    delete Param;
+    delete Res;
+    delete Stats;
 
-    tvarovac.Output();
-    
-    chladnicka.Output();
-
-    pekar3.Output();
-    plechy.Output();
-    kysiaren.Output();
-    pec.Output();
-
-    doba_vyroby_hist.Output();
-    pocet_kusov_stat.Output();
-    
-    std::cout << "\nPripravenych davok: " << pocet_pripravenych_davok << std::endl;
-    std::cout << "\nOcakavanych croaissantov: " << pocet_ocakavanych_kusov << std::endl;
-    std::cout << "\nDokoncenych croaissantov: " << pocet_kusov_stat.Sum() << std::endl;
-    
     return 0;
 }
