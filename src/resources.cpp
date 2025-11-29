@@ -5,15 +5,18 @@
  */
 
 #include "resources.hpp"
+#include <iostream>
 
-Resources::Resources(const Parameters *param) {
+Resources::Resources(const Parameters *param): 
+        m_dough_mixing_active_count(0) {
+
     // Pekari na miesanie
     int mixer_bakers_cnt = param->mixer_bakers_count();
     m_mixer_bakers.reserve(mixer_bakers_cnt);
 
     for (int i = 0; i < mixer_bakers_cnt; ++i) {
         m_mixer_bakers.emplace_back(std::make_unique<Facility>(
-            ("pekar_na_miesanie_" + std::to_string(i+1)).c_str()
+            ("pekar_na_miesanie_a_kysnutie_pecenie" + std::to_string(i+1)).c_str()
         ));
     }
 
@@ -59,10 +62,10 @@ Resources::Resources(const Parameters *param) {
 
     // Ppekari na kysnutie, pecenie
     int tray_bakers_count = param->tray_bakers_count();
-    m_tray_bakers.reserve(tray_bakers_count);
+    m_proofer_oven_bakers.reserve(tray_bakers_count);
 
     for (int i = 0; i < tray_bakers_count; ++i) {
-        m_tray_bakers.emplace_back(std::make_unique<Facility>(
+        m_proofer_oven_bakers.emplace_back(std::make_unique<Facility>(
             ("pekar_na_kysnutie_a_pecenie_" + std::to_string(i+1)).c_str()
         ));
     }
@@ -78,6 +81,25 @@ Resources::Resources(const Parameters *param) {
 
     // Chladnicka
     m_fridge = std::make_unique<Store>("chladnicka", param->fridge_capacity());
+}
+
+bool Resources::dough_mixing_all_finished() const {
+    return (m_dough_mixing_active_count == 0);
+}
+
+void Resources::move_mixer_bakers_to_tray_bakers() {
+    if (!dough_mixing_all_finished() || m_mixer_bakers.empty()) 
+        return;
+
+    m_proofer_oven_bakers.reserve(
+        m_proofer_oven_bakers.size() + m_mixer_bakers.size()
+    );
+
+    for (auto &baker : m_mixer_bakers) {
+        m_proofer_oven_bakers.push_back(std::move(baker));
+    }
+
+    m_mixer_bakers.clear();
 }
 
 void Resources::print() const {
@@ -96,7 +118,7 @@ void Resources::print() const {
     for (auto &shaper : m_shapers)
         shaper->Output();
     
-    for (auto &baker : m_tray_bakers)
+    for (auto &baker : m_proofer_oven_bakers)
         baker->Output();
 
     m_tray->Output();

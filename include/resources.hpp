@@ -22,7 +22,7 @@ private:
     std::vector<std::unique_ptr<Facility>> m_laminators;                // limanatovacie stroje
     std::vector<std::unique_ptr<Facility>> m_shapers;                   // tvarovacie stroje
 
-    std::vector<std::unique_ptr<Facility>> m_tray_bakers;               // pekari na kysnutie, pecenie
+    std::vector<std::unique_ptr<Facility>> m_proofer_oven_bakers;       // pekari na kysnutie, pecenie
     std::unique_ptr<Store> m_tray;                                      // plechy
     std::unique_ptr<Store> m_proofer;                                   // kysiaren
     std::unique_ptr<Store> m_oven;                                      // pec
@@ -30,9 +30,15 @@ private:
     std::unique_ptr<Store> m_fridge;                                    // chladnicka
 
 public:
+    unsigned long m_dough_mixing_active_count;
+
+public:
     Resources(const Parameters *param);
 
 public:
+    bool dough_mixing_all_finished() const;
+    void move_mixer_bakers_to_tray_bakers();
+
     Facility& get_facility(const std::vector<std::unique_ptr<Facility>> &facilities) const {
         auto ptr = facilities.front().get();
 
@@ -55,8 +61,8 @@ public:
         return get_facility(m_laminator_shaper_bakers);
     }
 
-    Facility& tray_baker() const {
-        return get_facility(m_tray_bakers);
+    Facility& proofer_oven_baker() const {
+        return get_facility(m_proofer_oven_bakers);
     }
 
     Facility& mixer() const {

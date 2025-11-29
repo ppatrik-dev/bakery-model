@@ -41,43 +41,43 @@ private:
         auto &proofer = Res->proofer();
         Enter(proofer, 1);
 
-        auto &tray_baker1 = Res->tray_baker();
-        Seize(tray_baker1, 0);
+        auto &proofer_baker1 = Res->proofer_oven_baker();
+        Seize(proofer_baker1, 0);
 
         Wait(Uniform(1.5, 3.0));
-        Release(tray_baker1);
+        Release(proofer_baker1);
 
         // Kysnutie
         Wait(Triag(90, 60, 120));
 
         // Vybratie plechu z kysiarne
-        auto &tray_baker2 = Res->tray_baker();
-        Seize(tray_baker2, 2);
+        auto &proofer_baker2 = Res->proofer_oven_baker();
+        Seize(proofer_baker2, 2);
 
         Wait(Uniform(1.5, 3.0));
         Leave(proofer, 1);
-        Release(tray_baker2);
+        Release(proofer_baker2);
 
         // Presun plechu do pece
         auto &oven = Res->oven();
         Enter(oven, 1);
 
-        auto &tray_baker3 = Res->tray_baker();
-        Seize(tray_baker3, 1);
+        auto &oven_baker1 = Res->proofer_oven_baker();
+        Seize(oven_baker1, 1);
 
         Wait(Uniform(1.0, 2.0));
-        Release(tray_baker3);
+        Release(oven_baker1);
 
         // Pecenie
         Wait(Triag(15, 12, 18));
 
         // Vybratie z pece
-        auto &tray_baker4 = Res->tray_baker();
+        auto &oven_baker2 = Res->proofer_oven_baker();
 
-        Seize(tray_baker4, 3);
+        Seize(oven_baker2, 3);
         Wait(Uniform(1.0, 2.0));
         Leave(oven, 1);
-        Release(tray_baker4);
+        Release(oven_baker2);
 
         // Chladenie
         Wait(Triag(15, 10, 20));
@@ -99,9 +99,11 @@ private:
     int m_pieces_count;
 
 public:
-    Dough(): m_pieces_count(Triag(300, 295, 305)) {}
+    Dough(): m_pieces_count(Normal(Param->one_dough_capacity(), 5)) {}
 
     void Behavior() {
+        Res->m_dough_mixing_active_count += 1;
+
         double m_start_time = Time;
 
         // Nova davka na miesanie
@@ -116,7 +118,7 @@ public:
         Release(mixer_baker1);
 
         // Miesanie
-        Wait(Triag(10, 8, 12));
+        Wait(Triag(12.5, 10, 15));
 
         // Domiesane cesto
         auto &mixer_baker2 = Res->mixer_baker();
@@ -147,6 +149,8 @@ public:
         Wait(Uniform(1, 2));
         Leave(fridge, 1);
         Release(mixer_baker4);
+
+        Res->m_dough_mixing_active_count -= 1;
 
         // Laminovanie
         auto &laminator = Res->laminator();
@@ -215,11 +219,21 @@ public:
 
 class DoughGenerator : public Event {
     void Behavior() {
-        if (Time < Param->simulation_duration() - 7*60) {
+        if (Time < Param->new_dough_period()) {
             (new Dough)->Activate();
             Stats->m_generated_doughs_count++;
 
-            Activate(Time + Normal(Param->new_dough_interval(), 5));
+            Activate(Time + Normal(Param->new_dough_interval(), 2));
+        }
+        else {
+            // Kontrola ci este prebieha miesanie
+            if (!Res->dough_mixing_all_finished()) {
+                Activate(Time + 10);
+            }
+            // presun pekarov na miesanie, na laminaciu a tvarovanie
+            else {
+                Res->move_mixer_bakers_to_tray_bakers();
+            }
         }
     }
 };

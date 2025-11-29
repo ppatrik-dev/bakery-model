@@ -11,7 +11,10 @@
 #include <sstream>
 
 #define SIMULATION_DURATION 480
-#define NEW_DOUGH_INTERVAL  30
+
+#define NEW_DOUGH_PERIOD    75
+#define NEW_DOUGH_INTERVAL  15
+#define ONE_DOUGH_PIECES    300
 
 #define MIXER_BAKERS_COUNT              1
 #define LAMINATOR_SHAPER_BAKERS_COUNT   1
@@ -20,10 +23,11 @@
 #define MIXERS_COUNT        1
 #define LAMINATORS_COUNT    1
 #define SHAPERS_COUNT       1
+
 #define FRIDGE_CAPACITY     8
-#define TRAYS_COUNT        20
+#define TRAYS_COUNT        30
 #define TRAY_CAPACITY      50
-#define PROOFER_CAPACITY   60
+#define PROOFER_CAPACITY   40
 #define OVEN_CAPACITY       5
 
 class Parameters {
@@ -31,7 +35,9 @@ private:
     std::string m_filename;
     std::unordered_map<std::string, double> m_parameters{
         {"TRVANIE_SIMULACIE", SIMULATION_DURATION},
+        {"DOBA_GENEROVANIA_NOVYCH_CIEST", NEW_DOUGH_PERIOD},
         {"INTERVAL_NOVEHO_CESTA", NEW_DOUGH_INTERVAL},
+        {"POCET_KUSOV_Z_JEDNEHO_CESTA", ONE_DOUGH_PIECES},
         {"POCET_PEKAROV_NA_MIESANIE", MIXER_BAKERS_COUNT},
         {"POCET_PEKAROV_NA_LAMINACIU_A_TVAROVANIE", LAMINATOR_SHAPER_BAKERS_COUNT},
         {"POCET_PEKAROV_NA_KYSNUTIE_A_PECENIE", TRAY_BAKERS_COUNT},
@@ -53,8 +59,16 @@ public:
         return m_parameters.at("TRVANIE_SIMULACIE");
     }
 
+    double new_dough_period() const {
+        return m_parameters.at("DOBA_GENEROVANIA_NOVYCH_CIEST");
+    }
+
     double new_dough_interval() const {
         return m_parameters.at("INTERVAL_NOVEHO_CESTA");
+    }
+
+    int one_dough_capacity() const {
+        return m_parameters.at("POCET_KUSOV_Z_JEDNEHO_CESTA");
     }
 
     int mixer_bakers_count() const {
