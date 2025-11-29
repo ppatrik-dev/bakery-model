@@ -134,31 +134,29 @@ public:
         Enter(fridge, 1);
 
         auto &mixer_baker3 = Res->mixer_baker();
-        Seize(mixer_baker3, 3);
+        Seize(mixer_baker3, 2);
 
         Wait(Uniform(1, 2));
         Release(mixer_baker3);
 
+        Res->m_dough_mixing_active_count -= 1;
+
         // 1. oddych cesta
         Wait(Triag(30, 20, 40));
 
-        // Vybratie z chladnicky
-        auto &mixer_baker4 = Res->mixer_baker();
-        Seize(mixer_baker4, 2);
-
-        Wait(Uniform(1, 2));
-        Leave(fridge, 1);
-        Release(mixer_baker4);
-
-        Res->m_dough_mixing_active_count -= 1;
-
-        // Laminovanie
-        auto &laminator = Res->laminator();
+        // Pripravene na laminaciu
+        // (kym nie je volny laminovaci stroj zostava v chladnicke)
+        auto &laminator = Res->laminator(); 
         Seize(laminator);
 
         auto &laminator_baker1 = Res->laminator_shaper_baker();
-        Seize(laminator_baker1, 3);
+        Seize(laminator_baker1, 1);
 
+        // Presun z chladnicky
+        Wait(Uniform(1, 2));
+        Leave(fridge, 1);
+        
+        // Laminovanie
         Wait(Triag(20, 15, 25));
         Release(laminator);
         Release(laminator_baker1);
@@ -167,7 +165,7 @@ public:
         Enter(fridge, 1);
 
         auto &laminator_baker2 = Res->laminator_shaper_baker();
-        Seize(laminator_baker2, 1);
+        Seize(laminator_baker2, 2);
 
         Wait(Uniform(1, 2));
         Release(laminator_baker2);
@@ -175,26 +173,22 @@ public:
         // 2. oddych cesta
         Wait(Triag(30, 20, 40));
 
-        // Vybratie z chladnicky
-        auto &shaper_baker1 = Res->laminator_shaper_baker();
-
-        Seize(shaper_baker1, 0);
-        Wait(Uniform(1, 2));
-        Leave(fridge, 1);
-        Release(shaper_baker1);
-
         // Cesto pripravene na tvarovanie
-        auto &shaper = Res->shaper();
+        // (kym nie je volny tvarovaci stroj zostava v chladnicke)
+        auto &shaper = Res->shaper(); 
         Seize(shaper);
 
-        auto &shaper_baker2 = Res->laminator_shaper_baker();
-        Seize(shaper_baker2, 2);
-
+        auto &shaper_baker1 = Res->laminator_shaper_baker();
+        Seize(shaper_baker1, 0);
+        
+        // Presun z chladnicky
+        Wait(Uniform(1, 2));
+        Leave(fridge, 1);
+        
         // Tvarovanie
         Wait(Triag(25, 20, 30));
-
         Release(shaper);
-        Release(shaper_baker2);
+        Release(shaper_baker1);
         
         int tray_capacity = Param->tray_capacity();
         int full_tray_cnt = m_pieces_count / tray_capacity;
