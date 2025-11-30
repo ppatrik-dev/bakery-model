@@ -69,12 +69,24 @@ public:
         return get_facility(m_mixers);
     }
 
+    Facility& mixer_by_index(int index) const {
+        return *(m_mixers.at(index));
+    }
+
     Facility& laminator() const {
         return get_facility(m_laminators);
     }
 
+    Facility& laminator_by_index(int index) const {
+        return *(m_mixers.at(index));
+    }
+
     Facility& shaper() const {
         return get_facility(m_shapers);
+    }
+
+    Facility& shaper_by_index(int index) const {
+        return *(m_shapers.at(index));
     }
 
     Store& fridge() const {

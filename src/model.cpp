@@ -30,8 +30,38 @@ int main(int argc, char **argv) {
     // Simulacia
     Init(0, Param->simulation_duration());
 
-    DoughGenerator generator;
-    generator.Activate();
+    DoughGenerator *dough_generator = new DoughGenerator;
+    dough_generator->Activate();
+
+    MixerFailure *mixer_failure = nullptr;
+    if (Param->mixer_failure()) {        
+        mixer_failure = new MixerFailure;
+        double t = Uniform(
+            Param->new_dough_period()/3,
+            2*Param->new_dough_period()/3
+        );
+        mixer_failure->Activate(Time + t);
+    }
+
+    LaminatorFailure *laminator_failure = nullptr;
+    if (Param->laminator_failure()) {
+        laminator_failure = new LaminatorFailure;
+        double t = Uniform(
+            Param->simulation_duration()/4,
+            3*Param->simulation_duration()/4
+        );
+        laminator_failure->Activate(Time + t);
+    }
+
+    ShaperFailure *shaper_failure = nullptr;
+    if (Param->shaper_failure()) {
+        shaper_failure = new ShaperFailure;
+        double t = Uniform(
+            Param->simulation_duration()/3,
+            2*Param->simulation_duration()/3
+        );
+        shaper_failure->Activate(Time + t);
+    }
 
     Run();
 
@@ -40,9 +70,14 @@ int main(int argc, char **argv) {
     Stats->print();
 
     // Uvolnenie zdrojov
-    delete Param;
-    delete Res;
-    delete Stats;
+    if (dough_generator) delete dough_generator;
+    if (mixer_failure) delete mixer_failure;
+    if (laminator_failure) delete laminator_failure;
+    if (shaper_failure) delete shaper_failure;
+    
+    if (Param) delete Param;
+    if (Res) delete Res;
+    if (Stats) delete Stats;
 
     return 0;
 }

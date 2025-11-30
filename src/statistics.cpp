@@ -23,7 +23,12 @@ void Statistics::print() const {
 
     std::cout
         << "|  " << std::left << std::setw(56) 
-        << ("Vygenerovanych davok = " + std::to_string(m_generated_doughs_count))
+        << ("Celkovy pocet ciest = " + std::to_string(m_doughs_total_count))
+        << "|\n";
+
+    std::cout
+        << "|  " << std::left << std::setw(56) 
+        << ("Dokoncenych ciest = " + std::to_string(m_doughs_finished_count))
         << "|\n";
 
     std::cout << "|" << std::left << std::setw(58) << " " << "|\n";

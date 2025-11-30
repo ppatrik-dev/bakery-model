@@ -24,6 +24,10 @@
 #define LAMINATORS_COUNT    1
 #define SHAPERS_COUNT       1
 
+#define MIXER_FAILURE       0
+#define LAMINATOR_FAILURE   0
+#define SHAPER_FAILURE      0
+
 #define FRIDGE_CAPACITY     8
 #define TRAYS_COUNT        30
 #define TRAY_CAPACITY      50
@@ -35,15 +39,23 @@ private:
     std::string m_filename;
     std::unordered_map<std::string, double> m_parameters{
         {"TRVANIE_SIMULACIE", SIMULATION_DURATION},
+
         {"DOBA_GENEROVANIA_NOVYCH_CIEST", NEW_DOUGH_PERIOD},
         {"INTERVAL_NOVEHO_CESTA", NEW_DOUGH_INTERVAL},
         {"POCET_KUSOV_Z_JEDNEHO_CESTA", ONE_DOUGH_PIECES},
+
         {"POCET_PEKAROV_NA_MIESANIE", MIXER_BAKERS_COUNT},
         {"POCET_PEKAROV_NA_LAMINACIU_A_TVAROVANIE", LAMINATOR_SHAPER_BAKERS_COUNT},
         {"POCET_PEKAROV_NA_KYSNUTIE_A_PECENIE", TRAY_BAKERS_COUNT},
+
         {"POCET_MIESACICH_STROJOV", MIXERS_COUNT},
         {"POCET_LAMINOVACICH_STROJOV", LAMINATORS_COUNT},
         {"POCET_TVAROVACICH_STROJOV", SHAPERS_COUNT},
+
+        {"PORUCHA_MIESACIEHO_STROJA", MIXER_FAILURE},
+        {"PORUCHA_LAMINOVACIEHO_STROJA", LAMINATOR_FAILURE},
+        {"PORUCHA_TVAROVACIEHO_STROJA", SHAPER_FAILURE},
+
         {"KAPACITA_CHLADNICKY", FRIDGE_CAPACITY},
         {"POCET_PLECHOV", TRAYS_COUNT},
         {"KAPACITA_PLECHU", TRAY_CAPACITY},
@@ -95,9 +107,21 @@ public:
         ); 
     }
 
+    bool mixer_failure() const {
+        return static_cast<bool>(
+            m_parameters.at("PORUCHA_MIESACIEHO_STROJA")
+        );
+    }
+
     int laminators_count() const {
         return static_cast<int>(
-			m_parameters.at("POCET_LAMINOVACICH_STROJOV")
+            m_parameters.at("POCET_LAMINOVACICH_STROJOV")
+        );
+    }
+    
+    bool laminator_failure() const {
+        return static_cast<bool>(
+            m_parameters.at("PORUCHA_LAMINOVACIEHO_STROJA")
         );
     }
 
@@ -106,7 +130,12 @@ public:
 			m_parameters.at("POCET_TVAROVACICH_STROJOV")
         );
     }
-    
+        
+    bool shaper_failure() const {
+        return static_cast<bool>(
+            m_parameters.at("PORUCHA_TVAROVACIEHO_STROJA")
+        );
+    }
 
     int fridge_capacity() const {
         return static_cast<int>(
