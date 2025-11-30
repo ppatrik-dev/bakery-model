@@ -1,9 +1,10 @@
 # Makefile
 
-TARGET=simulation
+TARGET=model
 SRCDIR=src
 INCDIRS=include
 BUILDDIR=build
+SIMDIR=sim
 
 CXX=g++
 CXXFLAGS=-std=c++20 -g -fPIC -MMD -MP $(addprefix -I,$(INCDIRS)) -I/usr/local/include
@@ -26,7 +27,7 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | $(BUILDDIR)
 
 -include $(DEPS)
 
-.PHONY: rebuild run clean
+.PHONY: rebuild run sim clean
 
 rebuild:
 	$(MAKE) clean
@@ -35,5 +36,9 @@ rebuild:
 run: $(TARGET)
 	./$(TARGET)
 
+sim: $(TARGET)
+	cd $(SIMDIR) && ./run.sh
+
 clean:
 	rm -rf $(BUILDDIR) $(TARGET)
+	rm -f sim/*/*.out
