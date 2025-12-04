@@ -1,6 +1,6 @@
 # Makefile
 
-TARGET=model
+TARGET=simulation
 SRCDIR=src
 INCDIRS=include
 BUILDDIR=build
@@ -8,7 +8,7 @@ SIMDIR=sim
 
 CXX=g++
 CXXFLAGS=-std=c++20 -g -fPIC -MMD -MP $(addprefix -I,$(INCDIRS)) -I/usr/local/include
-LDFLAGS=-L/usr/local/lib -lsimlib
+LDFLAGS=-lsimlib
 
 SOURCES=$(wildcard $(SRCDIR)/*.cpp)
 OBJECTS=$(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SOURCES))

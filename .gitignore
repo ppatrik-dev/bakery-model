@@ -1,3 +1,5 @@
+.vscode/
 lib/
 build/
 simulation
+*.out
