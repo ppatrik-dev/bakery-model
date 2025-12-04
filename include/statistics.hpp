@@ -25,7 +25,7 @@ public:
 
 public:
     Statistics():
-        m_production_duration_hist("Doba vyroby croisantov", 200, 50, 10),
+        m_production_duration_hist("Doba vyroby croisantov", 200, 25, 10),
         m_tray_pieces_count_stat("Pocet kusov na plechu"),
         m_doughs_total_count(0), m_doughs_finished_count(0),
         m_trays_total_count(0), m_trays_finished_count(0),

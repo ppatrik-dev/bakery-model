@@ -47,8 +47,8 @@ int main(int argc, char **argv) {
     if (Param->laminator_failure()) {
         laminator_failure = new LaminatorFailure;
         double t = Uniform(
-            Param->simulation_duration()/4,
-            3*Param->simulation_duration()/4
+            Param->simulation_duration()/3,
+            2*Param->simulation_duration()/3
         );
         laminator_failure->Activate(Time + t);
     }
