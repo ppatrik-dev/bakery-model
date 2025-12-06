@@ -27,7 +27,7 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | $(BUILDDIR)
 
 -include $(DEPS)
 
-.PHONY: rebuild run sim clean
+.PHONY: rebuild run sim zip clean sim-clean
 
 rebuild:
 	$(MAKE) clean
@@ -39,6 +39,11 @@ run: $(TARGET)
 sim: $(TARGET)
 	cd $(SIMDIR) && ./run.sh
 
+zip:
+	zip T9_xhrbac10_xprochp00.zip -r docs/ include/ sim/ src/ Makefile technicka_sprava.pdf
+
 clean:
 	rm -rf $(BUILDDIR) $(TARGET)
+
+sim-clean:
 	rm -f sim/*/*.out
