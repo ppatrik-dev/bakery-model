@@ -136,13 +136,13 @@ Simulation parameters can be loaded from a CSV file:
 
 CSV format:
 
-```csv
+```
 PARAMETER_NAME;VALUE
 ```
 
 Example:
 
-```csv
+```
 TRVANIE_SIMULACIE;480
 DOBA_GENEROVANIA_NOVYCH_CIEST;75
 INTERVAL_NOVEHO_CESTA;15
