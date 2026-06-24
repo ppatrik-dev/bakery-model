@@ -276,4 +276,4 @@ Largest production loss among all tested failures.
 
 ## License
 
-This project is provided for educational and academic purposes.
+This project is licensed under the MIT License. See the `LICENSE` file for details.
