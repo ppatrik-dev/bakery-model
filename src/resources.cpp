@@ -60,7 +60,7 @@ Resources::Resources(const Parameters *param):
         ));
     }
 
-    // Ppekari na kysnutie, pecenie
+    // Pekari na kysnutie, pecenie
     int tray_bakers_count = param->tray_bakers_count();
     m_proofer_oven_bakers.reserve(tray_bakers_count);
 

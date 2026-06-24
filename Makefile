@@ -40,7 +40,7 @@ sim: $(TARGET)
 	cd $(SIMDIR) && ./run.sh
 
 zip:
-	zip T9_xhrbac10_xprochp00.zip -r docs/ include/ sim/ src/ Makefile technicka_sprava.pdf
+	zip 09_xhrbac10_xprochp00.zip -r docs/ include/ sim/ src/ Makefile technicka_sprava.pdf
 
 clean:
 	rm -rf $(BUILDDIR) $(TARGET)

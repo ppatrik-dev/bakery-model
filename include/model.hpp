@@ -253,7 +253,7 @@ private:
                 (new Tray(m_start_time, tray_capacity))->Activate();
             }
 
-            // posledný plech so zvysnymi kusmi
+            // posledny plech so zvysnymi kusmi
             (new Tray(m_start_time, remaining_pcs))->Activate();
         }
     }
